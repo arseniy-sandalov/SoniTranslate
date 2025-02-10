@@ -269,7 +269,7 @@ def check_openai_api_key():
 
 
 class SoniTranslate(SoniTrCache):
-    def __init__(self, cpu_mode=False):
+    def __init__(self, cpu_mode=False, edit_subs_complete=False):
         super().__init__()
         if cpu_mode:
             os.environ["SONITR_DEVICE"] = "cpu"
@@ -282,7 +282,7 @@ class SoniTranslate(SoniTrCache):
         self.result_diarize = None
         self.align_language = None
         self.result_source_lang = None
-        self.edit_subs_complete = False
+        self.edit_subs_complete = edit_subs_complete
         self.voiceless_id = None
         self.burn_subs_id = None
 
@@ -2826,6 +2826,10 @@ def create_parser():
         default=False,
         help="Enable CPU mode to run the program without utilizing GPU acceleration.",
     )
+    parser.add_argument(
+        "--edsubs",
+        action="store_true"
+    )
     return parser
 
 
@@ -2847,7 +2851,7 @@ if __name__ == "__main__":
 
     models_path, index_path = upload_model_list()
 
-    SoniTr = SoniTranslate(cpu_mode=args.cpu_mode)
+    SoniTr = SoniTranslate(cpu_mode=args.cpu_mode,edit_subs_complete=args.edsubs)
 
     lg_conf = get_language_config(language_data, language=args.language)
 
